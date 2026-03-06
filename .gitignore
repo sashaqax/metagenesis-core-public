@@ -1,0 +1,121 @@
+# MetaGenesis Core - Complete .gitignore for USPTO Submission
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Node.js dependencies and cache
+frontend/node_modules/
+frontend/.cache/
+*.pack
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment and configuration
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.env.local
+*.env.production
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+logs/
+temp/
+tmp/
+*.tmp
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Database and backup files
+*.db
+*.sqlite
+*.sqlite3
+backup/
+*.bak
+*.backup
+frontend/.env
+
+# Test coverage and reports
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+.coverage.*
+
+# Scientific data (keep legal signatures)
+# Exclude large data files but keep essential exports
+*.npy
+*.csv
+*.h5
+*.hdf5
+
+# UE5 exports (keep essential files)
+# Large mesh files can be regenerated
+*.fbx
+*.blend
+*.max
+
+# Documentation builds
+docs/_build/
+site/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Supervisor logs (keep essential logs only)
+/var/log/supervisor/*.log
+
+# Keep essential legal and configuration files
+!legal_signatures.json
+!phase26_completion_report.md
+!phase26_upgrade_plan.md
+!system_audit_report.md
+!README.md
+!LICENSE
+.env
+backend/.env
+**/.env
+# Local runtime artifacts (do not commit)
+reports/ledger_v1.jsonl
