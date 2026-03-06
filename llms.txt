@@ -1,0 +1,60 @@
+# MetaGenesis Core
+
+Verification protocol layer for computational scientific claims.
+Makes computational results tamper-evident, reproducible, and
+independently auditable offline by any third party.
+
+NOT a simulation platform. NOT an AI system.
+A governance + evidence + verification pipeline.
+
+## What this repo does
+
+Any computational result (calibration, model output, data certificate)
+can be packaged into a self-contained verification bundle.
+A third party runs one command and gets PASS or FAIL with a reason.
+Semantic verification catches tampering that survives SHA-256.
+
+## Key files to read first
+
+- README.md — problem, solution, quickstart
+- reports/scientific_claim_index.md — all active claims, job_kinds, thresholds
+- reports/canonical_state.md — authoritative project state, active claims list
+- reports/known_faults.yaml — known limitations, do not overclaim
+- backend/progress/runner.py — job dispatch (_execute_job_logic)
+- scripts/steward_audit.py — governance enforcement (run this to check integrity)
+- scripts/mg.py — pack build and verify
+- demos/open_data_demo_01/run_demo.py — working end-to-end demo
+
+## Active claims (6)
+
+MTR-1      mtr1_youngs_modulus_calibration
+MTR-2      mtr2_thermal_paste_conductivity_calibration
+MTR-3      mtr3_thermal_multilayer_contact_calibration
+SYSID-01   sysid1_arx_calibration
+DATA-PIPE-01 datapipe1_quality_certificate
+DRIFT-01   drift_calibration_monitor
+
+## Governance invariant
+
+runner dispatch kinds == scientific_claim_index job_kinds == canonical_state claims
+Enforced by: python scripts/steward_audit.py → must output STEWARD AUDIT: PASS
+
+## Hard rules (never violate)
+
+- Never use "tamper-proof" — use "tamper-evident"
+- Never invent implementations — if file not in repo, say so
+- Never add a claim without: implementation + test + claim_index entry + canonical_state update
+- steward_audit.py must PASS after every change
+- known_faults.yaml is authoritative — do not contradict it
+
+## Patent
+
+USPTO PPA #63/996,819, filed 2026-03-05, inventor Yehor Bazhynov
+4 patentable innovations: bidirectional claim coverage, semantic tamper
+detection, policy-gate immutable anchors, dual-mode canary pipeline
+
+## How to verify everything works
+
+python scripts/steward_audit.py                    # PASS
+python -m pytest tests/steward tests/materials -q  # 49 passed
+python demos/open_data_demo_01/run_demo.py         # PASS PASS
