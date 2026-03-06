@@ -1,4 +1,4 @@
-name: Total Audit Guard (v2 - graceful)
+name: Steward Audit Gate
 
 on:
   pull_request:
@@ -10,9 +10,9 @@ permissions:
   contents: read
 
 jobs:
-  audit:
+  steward:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
       - name: Checkout repo
@@ -23,66 +23,15 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install minimal deps
-        shell: bash
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
+          pip install -r requirements.txt
 
-      - name: Repo snapshot
-        shell: bash
+      - name: Steward audit
         run: |
-          echo "Ref: $GITHUB_REF"
-          echo "SHA: $GITHUB_SHA"
-          ls -la
+          python scripts/steward_audit.py
 
-      - name: Phase map check (graceful)
-        shell: bash
+      - name: Run tests
         run: |
-          if [ -f docs/phase_map_v2.csv ]; then
-            echo "OK: docs/phase_map_v2.csv found"
-          else
-            echo "::warning::docs/phase_map_v2.csv not found (allowed in v2)"
-          fi
-
-      - name: Locked phases check (graceful)
-        shell: bash
-        run: |
-          if [ -f locked_phases.json ]; then
-            echo "OK: locked_phases.json found"
-          else
-            echo "::warning::locked_phases.json not found (allowed in v2)"
-          fi
-
-      - name: Legal directory check (graceful)
-        shell: bash
-        run: |
-          if [ -d legal ]; then
-            echo "OK: legal/ present"
-          else
-            echo "::warning::legal/ not found (allowed in v2)"
-          fi
-
-      - name: Archive directory check (graceful)
-        shell: bash
-        run: |
-          if [ -d archive ]; then
-            echo "OK: archive/ present"
-          else
-            echo "::warning::archive/ not found (allowed in v2)"
-          fi
-
-      - name: Tests (non-blocking)
-        shell: bash
-        run: |
-          if [ -d tests ]; then
-            pytest || echo "::warning::pytest failed (non-blocking in v2)"
-          else
-            echo "::warning::tests/ not found"
-          fi
-
-      - name: Audit summary
-        shell: bash
-        run: |
-          echo "Total Audit Guard v2 completed"
-          echo "All checks are graceful by design"
+          python -m pytest tests/steward tests/materials -q
