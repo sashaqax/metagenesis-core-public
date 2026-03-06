@@ -9,6 +9,7 @@ No new claims. No new runner modules. No network required.
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -66,7 +67,9 @@ def main() -> int:
 
     # 2. Pack build with evidence
     pack_dir = DEMO_DIR / "pack"
-    pack_dir.mkdir(parents=True, exist_ok=True)
+    # Clean up previous pack if exists (makes demo idempotent)
+    if pack_dir.exists():
+        shutil.rmtree(pack_dir)
     rc_build = _mg([
         "pack", "build",
         "--output", str(pack_dir),
