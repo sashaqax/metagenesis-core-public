@@ -20,7 +20,7 @@ Proven by adversarial tests. Steward audit passes on every PR.
 
 ## Verify in 5 minutes
 ```bash
-git clone https://github.com/YOUR_USERNAME/metagenesis-core-public
+git clone https://github.com/Lama999901/metagenesis-core-public
 cd metagenesis-core-public
 pip install -r requirements.txt
 python demos/open_data_demo_01/run_demo.py

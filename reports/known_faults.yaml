@@ -9,7 +9,7 @@ known_faults:
     description: "Legacy phases (1-11) may have database connection dependencies that are not active in current deployment"
     affected_phases: [1, 2, 3, 4, 6, 10]
     status: "FAULT_EXPECTED"
-    ticket_ref: "https://github.com/MetaGenesis/core/issues/legacy-db-deps"
+    ticket_ref: "https://github.com/Lama999901/metagenesis-core-public/issues"
     mitigation: "Legacy phases are archived and not required for current operations"
     
   - fault_id: "TEST_ENV_002"
@@ -27,7 +27,7 @@ known_faults:
     description: "Legacy API endpoints may not respond due to deprecated authentication methods"
     affected_phases: [1, 2, 3, 4, 6, 10]
     status: "FAULT_EXPECTED"
-    ticket_ref: "https://github.com/MetaGenesis/core/issues/legacy-auth"
+    ticket_ref: "https://github.com/Lama999901/metagenesis-core-public/issues"
     mitigation: "Legacy phases preserved for continuity, not operational requirements"
 
 fault_classification:

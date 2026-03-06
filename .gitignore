@@ -119,3 +119,8 @@ backend/.env
 **/.env
 # Local runtime artifacts (do not commit)
 reports/ledger_v1.jsonl
+
+# Demo generated files
+demos/open_data_demo_01/ledger.jsonl
+demos/open_data_demo_01/pack/
+demos/open_data_demo_01/VERIFY_REPORT.json
