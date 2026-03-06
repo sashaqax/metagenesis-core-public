@@ -135,6 +135,24 @@ USPTO Provisional Patent Application filed: 2026-03-05
 Application #: 63/996,819
 Inventor: Yehor Bazhynov
 
+---
+
+## Commercial use
+
+The code is MIT licensed and free to use.
+
+If you need a verification bundle for your results, pipeline
+integration, or ongoing verification infrastructure — commercial
+services are available.
+
+Free pilot available: send your computational result and I will
+build a verification bundle at no charge.
+
+[COMMERCIAL.md](COMMERCIAL.md) — pricing and contact
+Contact: yehorbazhynov@gmail.com
+
+---
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
