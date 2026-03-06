@@ -141,8 +141,8 @@ python scripts/mg.py verify --pack /tmp/ppa_pack
 Pre-filing (technical):
 □ steward_audit.py → PASS
 □ test_cert02 → PASS (both normal + tamper tests)
-□ stress_real02 → PASS
-□ All 5 claims reproducible via python -m pytest
+□ python -m pytest tests/steward tests/materials -q → 49 passed
+□ All 6 claims reproducible via python -m pytest
 
 Pre-filing (documentation):
 □ CLAIMS_DRAFT.md — V2 (code-backed, no invented features)
@@ -177,7 +177,7 @@ reports/scientific_claim_index.md
 
 reports/canonical_state.md
   → Authoritative project state snapshot
-  → current_claims_list: MTR-1, MTR-2, MTR-3, SYSID-01, DATA-PIPE-01
+  → current_claims_list: MTR-1, MTR-2, MTR-3, SYSID-01, DATA-PIPE-01, DRIFT-01
 ```
 
 ---
