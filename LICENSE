@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2025 MetaGenesis Core Team
+Copyright (c) 2026 Yehor Bazhynov
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -9,42 +9,13 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
----
-
-INTELLECTUAL PROPERTY NOTICE
-
-This repository contains patent-pending technology for:
-- Digital-to-Physical Symbiotic Correction Systems
-- Multi-Phase AI-Driven Scientific Discovery Engines
-- Quantum-to-Molecular Simulation Pipelines
-- Autonomous Hypothesis Generation and Validation
-
-Patent Application Status: USPTO Ready
-Legal Framework: Complete with 8 cryptographic signatures
-Compliance: ISO 9001, ISO 27001, FDA 21 CFR Part 11, GLP
-
-All innovations and methodologies are protected under intellectual property law.
-For licensing inquiries regarding commercial use, contact: licensing@metagenesis-core.org
-
-The software includes the following legal signatures and their associated modules:
-- LEGAL_SIG_GLOBALBRIDGE_20250720 (Phase 19: Global Research Bridge)
-- LEGAL_SIG_AUTONOMOUS_20250720 (Phase 20: Autonomous Discovery Engine)  
-- LEGAL_SIG_ZEROPOINT_20250720 (Phase 21: Zero-Point Genesis Layer)
-- LEGAL_SIG_MATTERGENESIS_20250721_PHASE22 (Phase 22: Matter Genesis Layer)
-- LEGAL_SIG_ATOMICRESONANCE_20250721 (Phase 23: Atomic Resonance Layer)
-- LEGAL_SIG_MOLECULAR_20250721 (Phase 24: Molecular Assembly Layer)
-- LEGAL_SIG_MULTIMOLECULAR_20250721 (Phase 25: Multi-Molecular Layer)
-- LEGAL_SIG_PHASE26_COMPLETION (Phase 26: Systemwide Upgrade Complete)
-
-Complete audit trail maintained for regulatory compliance and patent protection.
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
