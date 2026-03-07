@@ -4,7 +4,6 @@ MTR-1 Young's Modulus Calibration - OLS through origin.
 
 Purpose: Deterministic calibration workload for Progress Engine evidence.
 Synthetic mode or dataset-backed (DATA-01 fingerprint). No heavy deps (stdlib only).
-Legal Authority: Infinity Protocol v2.0
 """
 
 import csv
