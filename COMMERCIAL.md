@@ -1,28 +1,37 @@
-# Commercial Use
+# Commercial
 
-MetaGenesis Core is open source. The code is free to use, study,
-and extend under the MIT license.
+MetaGenesis Core is open source under the MIT license.
+The verification protocol (4 innovations) is patent-pending.
 
-Commercial services are available for teams and researchers who
-want results without running the infrastructure themselves.
+Commercial services are available for teams that need verification
+infrastructure built or integrated into their existing workflows.
 
 ---
 
-## What people pay for
+## The core value proposition
+
+Your computational result — ML accuracy, calibration output, risk model
+output, regulatory submission — becomes independently verifiable by any
+third party with one command. No model access required. No environment
+required. Tamper-evident evidence.
+
+---
+
+## Services
 
 ### Verification bundle — one-time
 
-You have a computational result. A reviewer, collaborator, or
-regulator needs to verify it independently without access to
-your environment.
+You have a computational result. A reviewer, regulator, client, or
+auditor needs to verify it independently.
 
-You send your result. You get back a self-contained verification
-bundle — run artifacts, provenance, verification report. The
-recipient runs one command and gets PASS or FAIL.
+You send the result. You receive a self-contained verification bundle.
+The recipient runs `mg.py verify --pack bundle.zip` and gets PASS or FAIL.
 
-**Who this is for:** researchers submitting papers with
-quantitative computational claims, teams handing off results
-to clients or auditors.
+**Who this is for:**
+- ML teams publishing benchmark results for peer review
+- Research teams submitting computational evidence to journals
+- Engineering teams handing off simulation results to clients
+- Any team needing third-party verifiable proof of a computational claim
 
 **Price:** $200–500 per bundle depending on complexity.
 
@@ -30,16 +39,17 @@ to clients or auditors.
 
 ### Pipeline integration — project
 
-You have an existing computational pipeline. You want every
-result it produces to be automatically packaged into a
-verifiable evidence bundle.
+You have an existing pipeline. Every result it produces should
+automatically generate a verifiable evidence bundle.
 
-This is a one-time integration: we add the verification layer
-to your pipeline. After that, every run produces a bundle
-you can share with anyone.
+One-time integration: the verification layer is added to your pipeline.
+After that, every run produces a bundle you can share with anyone.
 
-**Who this is for:** ML teams, materials science labs, anyone
-running repeated computational experiments.
+**Who this is for:**
+- ML teams running continuous benchmark evaluations
+- Materials science labs with ongoing calibration workflows
+- Data engineering teams producing certified pipeline outputs
+- Organizations preparing for regulatory submission of computational evidence
 
 **Price:** $2,000–5,000 per project.
 
@@ -47,29 +57,52 @@ running repeated computational experiments.
 
 ### Ongoing verification — monthly
 
-Your pipeline runs continuously. You need every result to be
-verified, anchored, and drift-monitored against your baseline.
-You need an audit trail you can show to clients, regulators,
-or reviewers on demand.
+Your pipeline runs continuously. Every result needs to be verified,
+anchored, and drift-monitored against a certified baseline. You need
+an audit trail for clients, regulators, or reviewers on demand.
 
-Includes: verification bundles for every run, drift monitoring
-against verified anchors, monthly audit report.
+Includes: verification bundles for every run, drift monitoring against
+verified anchors, monthly audit report in machine-readable and
+human-readable formats.
 
-**Who this is for:** enterprise teams, regulated industries,
-research groups with ongoing publication pipelines.
+**Who this is for:**
+- Enterprise ML teams with model performance SLAs
+- Regulated industries requiring continuous computational audit trails
+  (pharma, finance, carbon markets, medical device software)
+- Research groups with ongoing publication pipelines
 
 **Price:** $500–2,000 per month depending on volume.
 
 ---
 
+## Domain-specific context
+
+**AI / ML companies:** EU AI Act and FDA AI/ML guidance for Software as
+a Medical Device are creating regulatory demand for independent model
+performance verification. A verifiable bundle satisfies this requirement
+without disclosing the model or training data.
+
+**Pharma / biotech:** FDA 21 CFR Part 11 requires audit trails for
+computational submissions. MetaGenesis bundles provide offline-verifiable
+evidence chains compatible with existing data integrity requirements.
+
+**Carbon markets:** Voluntary carbon credit buyers increasingly require
+independent verification of the underlying model outputs. A tamper-evident
+bundle gives carbon project developers credible, auditable evidence.
+
+**Financial services:** Basel III/IV model risk management requires
+documented validation of risk model outputs. Verifiable bundles provide
+an audit-ready evidence trail without exposing proprietary model IP.
+
+---
+
 ## Free pilot
 
-If you have a specific computational claim you want to verify,
-contact me. I will build a verification bundle for it free of
-charge. No strings.
+If you have a specific computational result you want to verify, contact
+me. I will build a verification bundle for it at no charge.
 
-This is how I understand whether the infrastructure fits your
-use case before any commercial conversation.
+This is how I determine whether the protocol fits your use case before
+any commercial conversation. No strings attached.
 
 ---
 
@@ -85,10 +118,8 @@ Response within 24 hours.
 ## Patent
 
 USPTO Provisional Patent Application #63/996,819
-Filed: 2026-03-05
-Inventor: Yehor Bazhynov
+Filed: 2026-03-05 · Inventor: Yehor Bazhynov
 
-The verification protocol (bidirectional claim coverage,
-semantic tamper detection, policy-gate immutable anchors,
-dual-mode canary pipeline) is patent-pending.
-The open source code is available under MIT.
+The verification protocol — bidirectional claim coverage, semantic tamper
+detection, policy-gate immutable anchors, dual-mode canary pipeline — is
+patent-pending. The open source code is available under MIT.

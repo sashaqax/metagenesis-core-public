@@ -7,13 +7,15 @@ the rules of this repository. Read this before making any change.
 
 ## What this repo is
 
-MetaGenesis Core is a verification protocol layer.
-It makes computational scientific claims tamper-evident,
-reproducible, and independently auditable offline.
+MetaGenesis Core is an open verification protocol layer.
+It implements the MetaGenesis Verification Protocol (MVP) v0.1.
+It makes computational claims tamper-evident, reproducible, and
+independently auditable offline by any third party.
 
 It is NOT a simulation platform.
 It is NOT an AI coordination system.
 It is NOT a molecular assembler or bio-computational system.
+It IS a governance + evidence + verification pipeline.
 
 ---
 
@@ -57,7 +59,7 @@ If you are not sure something exists, say so explicitly.
 
 Step 1 — Create implementation:
 File: backend/progress/<claim_id_lower>.py
-Required: JOB_KIND constant, run_<name>() function returning dict with mtr_phase key
+Required: JOB_KIND constant, run_*() function returning dict with mtr_phase key
 
 Step 2 — Register in runner:
 File: backend/progress/runner.py, function _execute_job_logic()
@@ -65,26 +67,42 @@ Add dispatch block following the exact pattern of existing claims
 
 Step 3 — Add to claim index:
 File: reports/scientific_claim_index.md
-Add section with: claim_id, job_kind (in backticks), V&V thresholds, reproduction command
+Add section with: claim_id, domain, job_kind (in backticks), V&V thresholds,
+reproduction command, use case examples
 
 Step 4 — Update canonical state:
 File: reports/canonical_state.md
 Add claim_id to current_claims_list pipe-separated value
 
 Step 5 — Write tests:
-File: tests/steward/test_<claim_id_lower>.py
-Required: test no-drift/success case, test failure case, test adversarial edge case
+File: tests/<domain>/test_<claim_id_lower>.py
+Required: test pass case, test fail case, test adversarial edge case,
+test mtr_phase key present, test determinism (same seed → same result)
 
 Step 6 — Verify:
 python scripts/steward_audit.py → STEWARD AUDIT: PASS
-python -m pytest tests/steward tests/materials -q → all passed
+python -m pytest tests/steward tests/materials tests/ml -q → all passed
+
+---
+
+## Active claims and their locations
+
+| Claim | File | Test |
+|-------|------|------|
+| MTR-1 | backend/progress/mtr1_calibration.py | tests/materials/ |
+| MTR-2 | backend/progress/mtr2_thermal_conductivity.py | tests/materials/ |
+| MTR-3 | backend/progress/mtr3_thermal_multilayer.py | tests/materials/ |
+| SYSID-01 | backend/progress/sysid1_arx_calibration.py | tests/systems/ |
+| DATA-PIPE-01 | backend/progress/datapipe1_quality_certificate.py | tests/data/ |
+| DRIFT-01 | backend/progress/drift_monitor.py | tests/steward/ |
+| ML_BENCH-01 | backend/progress/mlbench1_accuracy_certificate.py | tests/ml/ |
 
 ---
 
 ## Acceptance commands (run before any commit)
 
 python scripts/steward_audit.py
-python -m pytest tests/steward tests/materials -q
+python -m pytest tests/steward tests/materials tests/ml -q
 python demos/open_data_demo_01/run_demo.py
 grep -r "tamper-proof\|GPT-5\|19x\|VacuumGenesis" docs/ scripts/ backend/
 
@@ -99,3 +117,4 @@ Job runs via runner.run_job() → produces run_artifact.json + ledger_snapshot.j
 → mg.py verify checks integrity (SHA-256) then semantic invariants (job_snapshot present,
 canary_mode correct, payload.kind matches) → PASS or FAIL.
 Steward_audit enforces bidirectional coverage: runner kinds == claim_index kinds == canonical_state.
+Protocol specification: docs/PROTOCOL.md.

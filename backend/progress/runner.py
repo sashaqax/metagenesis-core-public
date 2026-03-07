@@ -29,28 +29,14 @@ class ProgressRunner:
     """Job runner with ledger integration."""
     
     def __init__(self, job_store: JobStore, ledger_store: LedgerStore):
-        """Initialize runner.
-        
-        Args:
-            job_store: Job storage
-            ledger_store: Ledger for audit trail
-        """
         self.job_store = job_store
         self.ledger_store = ledger_store
         logger.info("ProgressRunner initialized with ledger integration")
     
     def create_job(self, payload: Dict[str, Any] = None) -> Job:
-        """Create new job and emit ledger entry.
-        
-        Args:
-            payload: Optional job payload
-            
-        Returns:
-            Created job
-        """
+        """Create new job and emit ledger entry."""
         from backend.progress.models import generate_job_id, generate_trace_id
         
-        # Create job
         job = Job(
             job_id=generate_job_id(),
             trace_id=generate_trace_id(),
@@ -59,10 +45,8 @@ class ProgressRunner:
             payload=payload or {}
         )
         
-        # Store job
         self.job_store.create(job)
         
-        # Emit ledger entry
         ledger_entry = LedgerEntry(
             trace_id=job.trace_id,
             created_at=job.created_at,
@@ -90,14 +74,7 @@ class ProgressRunner:
         Args:
             job_id: Job to execute
             canary_mode: If True, run is non-authoritative (canary).
-            
-        Returns:
-            Updated job
-            
-        Raises:
-            ValueError: If job not found or already running
         """
-        # Get job
         job = self.job_store.get(job_id)
         if not job:
             raise ValueError(f"Job not found: {job_id}")
@@ -105,23 +82,18 @@ class ProgressRunner:
         if job.status == JobStatus.RUNNING:
             raise ValueError(f"Job already running: {job_id}")
         
-        # Update status to RUNNING
         job.status = JobStatus.RUNNING
         job.started_at = now_iso8601()
         self.job_store.update(job)
         
-        # Execute job (simple demo: always succeeds for v1)
         try:
-            # Demo execution logic
             result = self._execute_job_logic(job)
             
-            # Mark as succeeded
             job.status = JobStatus.SUCCEEDED
             job.completed_at = now_iso8601()
             job.result = result
             self.job_store.update(job)
             
-            # Ledger: canary vs authoritative
             action = "job_completed_canary" if canary_mode else "job_completed"
             actor = "scheduler_v1_canary" if canary_mode else "scheduler_v1"
             meta = {
@@ -150,7 +122,6 @@ class ProgressRunner:
             logger.info(f"Job completed successfully: {job.job_id}")
             
         except Exception as e:
-            # Mark as failed
             job.status = JobStatus.FAILED
             job.completed_at = now_iso8601()
             job.error = str(e)
@@ -215,11 +186,13 @@ class ProgressRunner:
             f.write(json.dumps(snapshot_line) + "\n")
     
     def _execute_job_logic(self, job: Job) -> Dict[str, Any]:
-        """Execute job logic (placeholder for v1); dispatch on payload.kind."""
+        """Dispatch job execution by payload.kind."""
+        payload = job.payload or {}
+
         from backend.progress.mtr1_calibration import JOB_KIND as MTR1_KIND, run_calibration as run_mtr1
         from backend.progress.mtr2_thermal_conductivity import JOB_KIND as MTR2_KIND, run_calibration as run_mtr2
         from backend.progress.mtr3_thermal_multilayer import JOB_KIND as MTR3_KIND, run_calibration as run_mtr3
-        payload = job.payload or {}
+
         if payload.get("kind") == MTR1_KIND:
             p = payload
             kwargs = dict(
@@ -236,6 +209,7 @@ class ProgressRunner:
                 kwargs["uq_samples"] = int(p["uq_samples"])
                 kwargs["uq_seed"] = int(p.get("uq_seed", p.get("seed", 42)))
             return run_mtr1(**kwargs)
+
         if payload.get("kind") == MTR2_KIND:
             return run_mtr2(
                 seed=int(payload.get("seed", 42)),
@@ -246,6 +220,7 @@ class ProgressRunner:
                 q_max=float(payload.get("q_max", 10.0)),
                 noise_scale=float(payload["noise_scale"]) if payload.get("noise_scale") is not None else None,
             )
+
         if payload.get("kind") == MTR3_KIND:
             p = payload
             return run_mtr3(
@@ -260,6 +235,7 @@ class ProgressRunner:
                 q_max=float(p.get("q_max", 10.0)),
                 noise_scale=float(p["noise_scale"]) if p.get("noise_scale") is not None else None,
             )
+
         from backend.progress.sysid1_arx_calibration import JOB_KIND as SYSID1_KIND, run_calibration as run_sysid1
         if payload.get("kind") == SYSID1_KIND:
             p = payload
@@ -271,6 +247,7 @@ class ProgressRunner:
                 u_max=float(p.get("u_max", 1.0)),
                 noise_scale=float(p["noise_scale"]) if p.get("noise_scale") is not None else None,
             )
+
         from backend.progress.datapipe1_quality_certificate import JOB_KIND as DATAPIPE1_KIND, run_certificate as run_datapipe1
         if payload.get("kind") == DATAPIPE1_KIND:
             p = payload
@@ -281,17 +258,7 @@ class ProgressRunner:
                 numeric_columns=p.get("numeric_columns"),
                 ranges_json=str(p["ranges_json"]) if p.get("ranges_json") is not None else None,
             )
-        from backend.progress.sysid1_arx_calibration import JOB_KIND as SYSID1_KIND, run_calibration as run_sysid1
-        if payload.get("kind") == SYSID1_KIND:
-            p = payload
-            return run_sysid1(
-                seed=int(p.get("seed", 42)),
-                a_true=float(p.get("a_true", 0.9)),
-                b_true=float(p.get("b_true", 0.5)),
-                n_steps=int(p.get("n_steps", 50)),
-                u_max=float(p.get("u_max", 1.0)),
-                noise_scale=float(p["noise_scale"]) if p.get("noise_scale") is not None else None,
-            )
+
         from backend.progress.drift_monitor import JOB_KIND as DRIFT01_KIND, run_drift_monitor as run_drift01
         if payload.get("kind") == DRIFT01_KIND:
             p = payload
@@ -302,6 +269,22 @@ class ProgressRunner:
                 anchor_units=str(p.get("anchor_units", "Pa")),
                 drift_threshold_pct=float(p.get("drift_threshold_pct", 5.0)),
             )
+
+        from backend.progress.mlbench1_accuracy_certificate import JOB_KIND as MLBENCH1_KIND, run_certificate as run_mlbench1
+        if payload.get("kind") == MLBENCH1_KIND:
+            p = payload
+            kwargs = dict(
+                seed=int(p.get("seed", 42)),
+                claimed_accuracy=float(p.get("claimed_accuracy", 0.90)),
+                accuracy_tolerance=float(p.get("accuracy_tolerance", 0.02)),
+                n_samples=int(p.get("n_samples", 1000)),
+                n_features=int(p.get("n_features", 10)),
+                noise_scale=float(p["noise_scale"]) if p.get("noise_scale") is not None else None,
+            )
+            if p.get("dataset_relpath") is not None:
+                kwargs["dataset_relpath"] = str(p["dataset_relpath"]).strip()
+            return run_mlbench1(**kwargs)
+
         return {
             'executed': True,
             'job_id': job.job_id,
@@ -309,17 +292,9 @@ class ProgressRunner:
         }
     
     def _compute_execution_time(self, job: Job) -> float:
-        """Compute job execution time in milliseconds.
-        
-        Args:
-            job: Completed job
-            
-        Returns:
-            Execution time in milliseconds
-        """
+        """Compute job execution time in milliseconds."""
         if not job.started_at or not job.completed_at:
             return 0.0
-        
         try:
             from datetime import datetime
             start = datetime.fromisoformat(job.started_at.replace('Z', '+00:00'))

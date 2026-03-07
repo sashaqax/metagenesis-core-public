@@ -3,7 +3,8 @@
 ## The verification proof loop
 
 ```
-Your data (CSV, measurements, model output)
+Your computation runs
+(ML model, calibration, data pipeline, risk model, ...)
            │
            ▼
     runner.run_job()
@@ -44,6 +45,10 @@ Your data (CSV, measurements, model output)
                     (with specific reason)
 ```
 
+Full protocol spec: [PROTOCOL.md](PROTOCOL.md)
+
+---
+
 ## Why two verification layers
 
 **Integrity alone is not enough.**
@@ -60,6 +65,8 @@ Semantic verification catches this:
 Proven by adversarial test:
 `tests/steward/test_cert02_pack_includes_evidence_and_semantic_verify.py`
 `::test_semantic_negative_missing_job_snapshot_fails_verify`
+
+---
 
 ## Governance loop
 
@@ -85,6 +92,8 @@ No claim without implementation.
 No implementation without claim.
 Enforced on every PR — not by human review.
 
+---
+
 ## Calibration anchor and drift
 
 ```
@@ -103,13 +112,37 @@ Verified result (e.g. MTR-1: E = 70 GPa)
    correction_required = True
 ```
 
+---
+
+## ML accuracy certification
+
+```
+Model predictions (y_true / y_pred)
+        │
+        ▼
+   ML_BENCH-01 run_certificate()
+        │
+        ├── synthetic mode (seed → deterministic dataset)
+        └── real data mode (CSV + SHA-256 fingerprint)
+        │
+        ▼
+   metrics: accuracy, precision, recall, F1
+        │
+   |actual_accuracy - claimed_accuracy| <= tolerance?
+        │
+   PASS or FAIL
+```
+
+---
+
 ## Active claims
 
-| Claim | File | job_kind |
-|-------|------|---------|
-| MTR-1 | backend/progress/mtr1_calibration.py | mtr1_youngs_modulus_calibration |
-| MTR-2 | backend/progress/mtr2_thermal_conductivity.py | mtr2_thermal_paste_conductivity_calibration |
-| MTR-3 | backend/progress/mtr3_thermal_multilayer.py | mtr3_thermal_multilayer_contact_calibration |
-| SYSID-01 | backend/progress/sysid1_arx_calibration.py | sysid1_arx_calibration |
-| DATA-PIPE-01 | backend/progress/datapipe1_quality_certificate.py | datapipe1_quality_certificate |
-| DRIFT-01 | backend/progress/drift_monitor.py | drift_calibration_monitor |
+| Claim | File | job_kind | Domain |
+|-------|------|---------|--------|
+| MTR-1 | backend/progress/mtr1_calibration.py | mtr1_youngs_modulus_calibration | Materials |
+| MTR-2 | backend/progress/mtr2_thermal_conductivity.py | mtr2_thermal_paste_conductivity_calibration | Materials |
+| MTR-3 | backend/progress/mtr3_thermal_multilayer.py | mtr3_thermal_multilayer_contact_calibration | Materials |
+| SYSID-01 | backend/progress/sysid1_arx_calibration.py | sysid1_arx_calibration | System ID |
+| DATA-PIPE-01 | backend/progress/datapipe1_quality_certificate.py | datapipe1_quality_certificate | Data |
+| DRIFT-01 | backend/progress/drift_monitor.py | drift_calibration_monitor | Drift |
+| ML_BENCH-01 | backend/progress/mlbench1_accuracy_certificate.py | mlbench1_accuracy_certificate | ML/AI |

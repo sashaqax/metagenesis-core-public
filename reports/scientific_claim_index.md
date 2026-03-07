@@ -1,6 +1,7 @@
-# Scientific Claim Index v0.1
+# Scientific Claim Index v0.2
 
-Documentation-only registry of domain claims so new cases remain uniquely structured and submission-ready. No code or policy changes; docs only.
+Documentation-only registry of domain claims so new cases remain uniquely
+structured and submission-ready. No code or policy changes; docs only.
 
 ---
 
@@ -9,6 +10,7 @@ Documentation-only registry of domain claims so new cases remain uniquely struct
 | Field | Value |
 |-------|--------|
 | **claim_id** | MTR-1 |
+| **domain** | Materials Science |
 | **job_kind** | `mtr1_youngs_modulus_calibration` |
 | **reproduction** | `python -m pytest tests/materials/test_mtr1_youngs_modulus.py -v` |
 | **evidence_fields** | Result lives under `job_snapshot.result` in the run artifact JSON. Contains `mtr_phase`, `inputs`, and `result` (estimated_E, rmse, relative_error, method, algorithm_version, n_points). |
@@ -22,6 +24,7 @@ Documentation-only registry of domain claims so new cases remain uniquely struct
 | Field | Value |
 |-------|--------|
 | **claim_id** | MTR-2 |
+| **domain** | Materials Science |
 | **job_kind** | `mtr2_thermal_paste_conductivity_calibration` |
 | **reproduction** | `python -m pytest tests/materials/test_mtr2_thermal_paste_conductivity.py -v` |
 | **evidence_fields** | Result lives under `job_snapshot.result` in the run artifact JSON. Contains `mtr_phase`, `inputs`, and `result` (estimated_k, rmse, relative_error, method, algorithm_version). |
@@ -35,6 +38,7 @@ Documentation-only registry of domain claims so new cases remain uniquely struct
 | Field | Value |
 |-------|--------|
 | **claim_id** | MTR-3 |
+| **domain** | Materials Science |
 | **job_kind** | `mtr3_thermal_multilayer_contact_calibration` |
 | **reproduction** | `python -m pytest tests/materials/test_mtr3_thermal_multilayer.py -v` |
 | **evidence_fields** | Result lives under `job_snapshot.result` in the run artifact JSON. Contains `mtr_phase`, `inputs`, and `result` (estimated_k, estimated_r_contact, rmse, rel_err_k, rel_err_r, method, algorithm_version). |
@@ -48,6 +52,7 @@ Documentation-only registry of domain claims so new cases remain uniquely struct
 | Field | Value |
 |-------|--------|
 | **claim_id** | DATA-PIPE-01 |
+| **domain** | Data Pipeline |
 | **job_kind** | `datapipe1_quality_certificate` |
 | **reproduction** | `python -m pytest tests/data/test_datapipe01_quality_certificate.py -v` |
 | **evidence_fields** | Result lives under `job_snapshot.result`. Contains domain, claim_id, inputs (dataset with sha256, relpath), result (pass, issues, metrics). |
@@ -61,6 +66,7 @@ Documentation-only registry of domain claims so new cases remain uniquely struct
 | Field | Value |
 |-------|--------|
 | **claim_id** | SYSID-01 |
+| **domain** | System Identification |
 | **job_kind** | `sysid1_arx_calibration` |
 | **reproduction** | `python -m pytest tests/systems/test_sysid01_arx_calibration.py -v` |
 | **evidence_fields** | Result lives under `job_snapshot.result` in the run artifact JSON. Contains domain, claim_id, inputs, and result (estimated_a, estimated_b, rmse, rel_err_a, rel_err_b, method, algorithm_version). |
@@ -74,8 +80,8 @@ Documentation-only registry of domain claims so new cases remain uniquely struct
 | Field | Value |
 |-------|--------|
 | **claim_id** | DRIFT-01 |
-| **job_kind** | `drift_calibration_monitor` |
 | **domain** | Simulation Correction / Calibration Traceability |
+| **job_kind** | `drift_calibration_monitor` |
 | **reproduction** | `python -m pytest tests/steward/test_drift01_calibration_anchor.py -v` |
 | **evidence_fields** | Result lives under `job_snapshot.result`. Contains mtr_phase, inputs (anchor_claim_id, anchor_value, anchor_units, current_value, drift_threshold_pct), result (anchor_value, current_value, drift_pct, drift_threshold_pct, drift_detected, correction_required). |
 | **V&V thresholds** | drift_threshold_pct 5.0%; drift_detected False when within threshold; drift_detected True when >5%. |
@@ -83,14 +89,9 @@ Documentation-only registry of domain claims so new cases remain uniquely struct
 
 ### Purpose
 
-Verified calibration results (e.g. MTR-1 Young's modulus = 70 GPa)
-become trusted anchor points. Any future computation is compared
-against the anchor. Drift beyond threshold signals that simulation
-correction is required.
-
-This is the foundational link between verification and simulation
-accuracy: without verified anchors, you cannot know what your
-simulation is drifting from.
+Verified calibration results (e.g. MTR-1 Young's modulus = 70 GPa) become trusted
+anchor points. Any future computation is compared against the anchor. Drift beyond
+threshold signals that simulation correction is required.
 
 ### V&V Thresholds (summary)
 
@@ -103,4 +104,53 @@ simulation is drifting from.
 
 ---
 
-*Index authority: MetaGenesis Core / SCI-01. Append new claims as table rows under new headings.*
+## ML_BENCH-01
+
+| Field | Value |
+|-------|--------|
+| **claim_id** | ML_BENCH-01 |
+| **domain** | Machine Learning / AI Benchmarking |
+| **job_kind** | `mlbench1_accuracy_certificate` |
+| **reproduction** | `python -m pytest tests/ml/test_mlbench01_accuracy_certificate.py -v` |
+| **evidence_fields** | Result lives under `job_snapshot.result`. Contains `mtr_phase` (ML_BENCH-01), `inputs` (seed, claimed_accuracy, accuracy_tolerance, n_samples, n_features, noise_scale, mode), `result` (actual_accuracy, claimed_accuracy, absolute_error, tolerance, pass, precision, recall, f1, n_samples). |
+| **V&V thresholds** | `abs(actual_accuracy - claimed_accuracy) <= accuracy_tolerance` (default tolerance 0.02). `result.pass` must be True for certificate to be valid. |
+| **notes (canary vs normal)** | Same as all other claims: job runs in normal or canary mode via `run_job(..., canary_mode=...)`; evidence artifacts produced for both; canary marked in artifact `canary_mode: true`. |
+
+### Purpose
+
+Any ML model that claims a specific accuracy can have that claim packaged into
+a tamper-evident evidence bundle. A third party verifies it offline with one
+command — PASS or FAIL — without access to the model, training data, or
+compute environment.
+
+Supports two modes:
+- **Synthetic mode** (default): deterministic dataset generated from seed. Same seed → same result always. Used for baseline certification and regression testing.
+- **Real data mode**: CSV with `y_true`/`y_pred` columns. SHA-256 fingerprinted. Used for certifying actual model predictions.
+
+### V&V Thresholds (summary)
+
+| Parameter | Value |
+|-----------|-------|
+| accuracy_tolerance (default) | 0.02 (±2 percentage points) |
+| pass condition | `abs(actual_accuracy - claimed_accuracy) <= tolerance` |
+| minimum test samples | 10 |
+| adversarial test | noise_scale=1.0 → FAIL (accuracy degrades below tolerance) |
+
+### Use case examples
+
+**AI benchmark certification:** A team claims 94.3% accuracy on a held-out test
+set. ML_BENCH-01 packages the predictions (y_true/y_pred CSV, SHA-256 fingerprinted)
+into a bundle. Any reviewer verifies: `mg.py verify --pack bundle.zip` → PASS or FAIL.
+No model access required.
+
+**SOTA claim verification:** A paper claims state-of-the-art results. Bundle the
+predictions. Any third party offline verification. Evidence is tamper-evident
+under trusted verifier assumptions.
+
+**Regulatory submission:** FDA, EMA, or financial regulator requires model
+performance evidence. Bundle contains: dataset fingerprint, predictions, accuracy
+metrics, drift monitoring against approved baseline.
+
+---
+
+*Index authority: MetaGenesis Core / SCI-01 v0.2. Append new claims as sections.*

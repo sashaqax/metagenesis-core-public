@@ -1,22 +1,29 @@
 # MetaGenesis Core
 
-Verification protocol layer for computational scientific claims.
-Makes computational results tamper-evident, reproducible, and
-independently auditable offline by any third party.
+Open verification protocol for computational claims.
+Implements the MetaGenesis Verification Protocol (MVP) v0.1.
 
-NOT a simulation platform. NOT an AI system.
-A governance + evidence + verification pipeline.
+Any computational result (ML accuracy, calibration, data pipeline output,
+risk model output) can be packaged into a self-contained verification bundle.
+A third party runs one command and gets PASS or FAIL with a reason.
+Semantic verification catches tampering that survives SHA-256.
+
+NOT a simulation platform. NOT an AI system. NOT a modeling tool.
+A governance + evidence + verification pipeline. An open protocol.
 
 ## What this repo does
 
-Any computational result (calibration, model output, data certificate)
-can be packaged into a self-contained verification bundle.
-A third party runs one command and gets PASS or FAIL with a reason.
-Semantic verification catches tampering that survives SHA-256.
+1. Wraps any computational result in a tamper-evident evidence bundle
+2. Verifies bundles offline with integrity + semantic layers
+3. Enforces governance: every claim has implementation, every implementation has claim
+4. Detects drift against verified calibration anchors
 
 ## Key files to read first
 
 - README.md — problem, solution, quickstart
+- docs/PROTOCOL.md — MVP v0.1 protocol specification
+- docs/USE_CASES.md — 5 target verticals with concrete examples
+- docs/ROADMAP.md — planned expansion
 - reports/scientific_claim_index.md — all active claims, job_kinds, thresholds
 - reports/canonical_state.md — authoritative project state, active claims list
 - reports/known_faults.yaml — known limitations, do not overclaim
@@ -25,14 +32,15 @@ Semantic verification catches tampering that survives SHA-256.
 - scripts/mg.py — pack build and verify
 - demos/open_data_demo_01/run_demo.py — working end-to-end demo
 
-## Active claims (6)
+## Active claims (7)
 
-MTR-1      mtr1_youngs_modulus_calibration
-MTR-2      mtr2_thermal_paste_conductivity_calibration
-MTR-3      mtr3_thermal_multilayer_contact_calibration
-SYSID-01   sysid1_arx_calibration
-DATA-PIPE-01 datapipe1_quality_certificate
-DRIFT-01   drift_calibration_monitor
+MTR-1        mtr1_youngs_modulus_calibration          (materials science)
+MTR-2        mtr2_thermal_paste_conductivity_calibration
+MTR-3        mtr3_thermal_multilayer_contact_calibration
+SYSID-01     sysid1_arx_calibration                   (system identification)
+DATA-PIPE-01 datapipe1_quality_certificate             (data pipelines)
+DRIFT-01     drift_calibration_monitor                 (drift detection)
+ML_BENCH-01  mlbench1_accuracy_certificate             (ML benchmarking)
 
 ## Governance invariant
 
@@ -55,6 +63,6 @@ detection, policy-gate immutable anchors, dual-mode canary pipeline
 
 ## How to verify everything works
 
-python scripts/steward_audit.py                    # PASS
-python -m pytest tests/steward tests/materials -q  # 49 passed
-python demos/open_data_demo_01/run_demo.py         # PASS PASS
+python scripts/steward_audit.py                              # PASS
+python -m pytest tests/steward tests/materials tests/ml -q  # all passed
+python demos/open_data_demo_01/run_demo.py                   # PASS PASS
